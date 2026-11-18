@@ -1,23 +1,25 @@
 import { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
-import LoginModal from './LoginModal'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useHotel } from '../context/useHotel'
 
 const links = [
   { to: '/#habitaciones', label: 'Habitaciones', end: true },
   { to: '/reservas', label: 'Reservas' },
   { to: '/huespedes', label: 'Huéspedes' },
+  { to: '/habitaciones-admin', label: 'Gestión de habitaciones' },
   { to: '/nosotros', label: 'Nosotros' },
 ]
 
 export default function Layout() {
+  const { authenticated, logout } = useHotel()
+  const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [loginOpen, setLoginOpen] = useState(false)
-  const [authenticated, setAuthenticated] = useState(false)
   const [year] = useState(() => new Date().getFullYear())
 
   function openLogin() {
     setMenuOpen(false)
-    setLoginOpen(true)
+    if (authenticated) logout()
+    else navigate('/ingresar')
   }
 
   return (
@@ -49,7 +51,7 @@ export default function Layout() {
               </NavLink>
             ))}
             <button type="button" className="rounded px-3 py-2 hover:bg-slate-700" onClick={openLogin}>
-              {authenticated ? 'Mi cuenta' : 'Ingresar'}
+              {authenticated ? 'Cerrar sesión' : 'Ingresar'}
             </button>
           </div>
         </div>
@@ -66,7 +68,7 @@ export default function Layout() {
               </NavLink>
             ))}
             <button type="button" className="block w-full rounded px-3 py-2 text-left hover:bg-slate-700" onClick={openLogin}>
-              {authenticated ? 'Mi cuenta' : 'Ingresar'}
+              {authenticated ? 'Cerrar sesión' : 'Ingresar'}
             </button>
           </div>
         )}
@@ -75,15 +77,6 @@ export default function Layout() {
       <main className="flex-1">
         <Outlet />
       </main>
-
-      {loginOpen && (
-        <LoginModal
-          authenticated={authenticated}
-          onClose={() => setLoginOpen(false)}
-          onLogin={() => setAuthenticated(true)}
-          onLogout={() => setAuthenticated(false)}
-        />
-      )}
 
       <footer className="mt-12 bg-slate-600 py-8 text-white">
         <div className="container-hotel grid gap-5 text-sm md:grid-cols-3 md:items-center">

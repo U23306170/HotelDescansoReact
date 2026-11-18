@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import { formatDate, money, nightsBetween, rooms } from '../data'
+import { formatDate, money, nightsBetween } from '../data'
 import { useHotel } from '../context/useHotel'
 
 const emptyForm = { guest: '', roomId: '0', status: 'Confirmada', entry: '', exit: '', observations: '' }
 
 export default function Reservations() {
-  const { reservations, guestNames, saveReservation, cancelReservation } = useHotel()
+  const { reservations, rooms, guestNames, saveReservation, cancelReservation } = useHotel()
   const [guestFilter, setGuestFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [typeFilter, setTypeFilter] = useState('')
@@ -178,7 +178,7 @@ export default function Reservations() {
                   <label className="label" htmlFor="room">Habitación disponible *</label>
                   <select id="room" className="field" value={form.roomId} onChange={(event) => update('roomId', event.target.value)}>
                     <option value="0">Seleccionar habitación...</option>
-                    {rooms.map((item) => <option key={item.id} value={item.id}>{item.number} — {item.type} — S/ {item.price}</option>)}
+                    {rooms.filter((item) => item.status === 'Disponible' || item.id === Number(form.roomId)).map((item) => <option key={item.id} value={item.id}>{item.number} — {item.type} — S/ {item.price}</option>)}
                   </select>
                 </div>
                 {modal === 'edit' && (

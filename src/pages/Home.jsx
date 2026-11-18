@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { rooms, services, slides, testimonials } from '../data'
+import { services, slides, testimonials } from '../data'
+import { useHotel } from '../context/useHotel'
 
 export default function Home() {
+  const { rooms } = useHotel()
   const location = useLocation()
   const [slide, setSlide] = useState(0)
   const [selectedRoom, setSelectedRoom] = useState(null)

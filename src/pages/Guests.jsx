@@ -15,7 +15,7 @@ function errorsFor(guest) {
 }
 
 export default function Guests() {
-  const { guests, saveGuest } = useHotel()
+  const { guests, saveGuest, deleteGuest } = useHotel()
   const [modal, setModal] = useState(null)
   const [notice, setNotice] = useState('')
   const [form, setForm] = useState(emptyGuest)
@@ -73,9 +73,10 @@ export default function Guests() {
                 <p className="text-sm text-slate-500">☎ {guest.phone}</p>
                 <p className="break-all text-sm text-slate-500">✉ {guest.email}</p>
               </div>
+              <div className="absolute right-4 top-4 flex gap-1">
               <button
                 type="button"
-                className="absolute right-4 top-4 rounded border border-blue-500 px-2.5 py-1 text-blue-600 hover:bg-blue-50"
+                className="rounded border border-blue-500 px-2.5 py-1 text-blue-600 hover:bg-blue-50"
                 aria-label={`Editar a ${guest.name}`}
                 onClick={() => {
                   setEditingId(guest.id)
@@ -86,6 +87,8 @@ export default function Guests() {
               >
                 ✎
               </button>
+              <button type="button" className="rounded border border-red-400 px-2.5 py-1 text-red-600 hover:bg-red-50" aria-label={`Eliminar a ${guest.name}`} onClick={() => { if (window.confirm(`¿Eliminar el registro de ${guest.name} ${guest.paternal}?`)) setNotice(deleteGuest(guest.id)) }}>×</button>
+              </div>
             </div>
             <footer className="mt-4 flex justify-between border-t border-slate-200 pt-3">
               <span className="badge bg-emerald-100 text-emerald-800">{guest.status}</span>
